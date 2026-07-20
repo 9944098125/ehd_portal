@@ -1,0 +1,18 @@
+### Create Super Admin
+# Assuming your registration or user creation endpoint is /api/auth/register
+# Adjust the URL if necessary.
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "employeeId": "SA-00",
+  "firstName": "Srinivas",
+  "lastName": "Akella",
+  "email": "srinivas.a@yopmail.com",
+  "phone": "7995643201",
+  "password": "$2b$10$sc47wAfaV4P/QJJiNybKvud2E0IItaa04ihW8r/WLBpk2zMdA.5Sy",
+  "role": "Super Admin",
+  "department": "Administration",
+  "designation": "CEO",
+  "profileImage": "https://res.cloudinary.com/dakda5ni3/image/upload/v1775922046/av2ssqfiksn59meiczic.png"
+}
