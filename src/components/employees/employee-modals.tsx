@@ -89,7 +89,7 @@ export const EmployeeModals: React.FC<EmployeeModalsProps> = ({ isOpen, onClose,
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[80vw] sm:max-w-[80vw] w-[80vw] sm:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
+      <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="max-w-[80vw] sm:max-w-[80vw] w-[80vw] sm:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
         <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-b border-zinc-200 dark:border-zinc-800">
           <DialogHeader>
             <div className="flex items-center space-x-3">
@@ -229,7 +229,7 @@ export const EmployeeModals: React.FC<EmployeeModalsProps> = ({ isOpen, onClose,
 
     {/* Error Dialog */}
     <Dialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog(prev => ({ ...prev, open }))}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
+      <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-red-600 dark:text-red-500">Error</DialogTitle>
           <DialogDescription className="text-zinc-700 dark:text-zinc-300 mt-2 text-base">

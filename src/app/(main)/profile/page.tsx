@@ -150,6 +150,7 @@ export default function ProfilePage() {
 
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [totalTime, setTotalTime] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -165,6 +166,16 @@ export default function ProfilePage() {
         employeeId: user.employeeId || "",
         role: user.role || "",
       });
+
+      // Fetch total time logged
+      fetch("/api/time-entries/total")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setTotalTime(data.data.totalTimeLogged);
+          }
+        })
+        .catch(err => console.error("Failed to fetch total time:", err));
     }
   }, [user]);
 
@@ -297,6 +308,7 @@ export default function ProfilePage() {
               <ReadOnlyField label="Role" value={formData.role} />
               <ReadOnlyField label="Department" value={formData.department} />
               <ReadOnlyField label="Designation" value={formData.designation} />
+              <ReadOnlyField label="Total Time Logged" value={totalTime !== null ? `${totalTime} hrs` : "Loading..."} />
             </div>
           </div>
 

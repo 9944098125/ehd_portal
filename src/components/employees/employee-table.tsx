@@ -187,7 +187,7 @@ export const EmployeeTable = () => {
       />
 
       <Dialog open={deleteConfirmState.open} onOpenChange={(open) => setDeleteConfirmState(prev => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
@@ -204,7 +204,7 @@ export const EmployeeTable = () => {
       </Dialog>
 
       <Dialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog(prev => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-destructive">Error</DialogTitle>
             <DialogDescription>

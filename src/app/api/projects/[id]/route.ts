@@ -131,7 +131,16 @@ async function getProjectByIdHandler(req: AuthenticatedRequest, { params }: { pa
       return apiResponse.error("Project not found", 404);
     }
 
-    return apiResponse.success("Project retrieved successfully", projects[0]);
+    const project = projects[0];
+    const TimeEntry = require("@/models/TimeEntry").default;
+    const timeStats = await TimeEntry.aggregate([
+      { $match: { project: new mongoose.Types.ObjectId(projectId) } },
+      { $group: { _id: null, totalTime: { $sum: "$hours" } } }
+    ]);
+    
+    project.totalTimeLogged = timeStats.length > 0 ? timeStats[0].totalTime : 0;
+
+    return apiResponse.success("Project retrieved successfully", project);
   } catch (error: any) {
     console.error("GET Project By Id API Error:", error);
     return apiResponse.error("Internal Server Error", 500, { details: error.message });

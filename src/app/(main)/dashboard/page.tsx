@@ -12,6 +12,8 @@ export default function DashboardPage() {
   const [isChecking, setIsChecking] = useState(true);
   const [activeTab, setActiveTab] = useState<"tickets" | "employees">("tickets");
 
+  const isAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN";
+
   useEffect(() => {
     if (!accessToken) {
       router.replace("/login");
@@ -20,14 +22,17 @@ export default function DashboardPage() {
     }
   }, [accessToken, router]);
 
+
+
   if (isChecking) {
     return null;
   }
 
-  const isAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN";
-
   return (
-    <div className="w-full flex flex-col min-h-[calc(100vh-80px)] rounded-xl">
+    <div className="w-full flex flex-col min-h-[calc(100vh-80px)] rounded-xl space-y-6">
+      
+
+
       {/* Tickets Section: 70% of viewport height approximately, full width */}
       <section className="w-full h-[70vh]">
         <TicketsPage />

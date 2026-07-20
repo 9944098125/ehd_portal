@@ -27,6 +27,7 @@ export interface ProjectType {
   totalTickets?: number;
   completedTickets?: number;
   progress?: number;
+  totalTimeLogged?: number;
 }
 
 interface ProjectState {

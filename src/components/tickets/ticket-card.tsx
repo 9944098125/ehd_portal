@@ -4,7 +4,17 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Badge } from "@/components/ui/badge";
-import { Paperclip, MoreVertical } from "lucide-react";
+import { Paperclip, MoreVertical, Clock } from "lucide-react";
+
+export const formatHours = (val: number) => {
+  const hours = Math.floor(val);
+  const mins = Math.round((val - hours) * 60);
+  let label = "";
+  if (hours > 0) label += `${hours}hr${hours > 1 ? 's' : ''}`;
+  if (hours > 0 && mins > 0) label += ` `;
+  if (mins > 0) label += `${mins}mins`;
+  return label || "0mins";
+};
 
 interface TicketCardProps {
   ticket: any;
@@ -89,9 +99,17 @@ export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
       </div>
 
       <div className="flex items-center justify-between mt-4">
-        <Badge className={`text-[10px] uppercase font-bold px-1.5 shadow-sm border-none ${getPriorityColor(ticket.priority)}`}>
-          {ticket.priority || "MEDIUM"}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge className={`text-[10px] uppercase font-bold px-1.5 shadow-sm border-none ${getPriorityColor(ticket.priority)}`}>
+            {ticket.priority || "MEDIUM"}
+          </Badge>
+          {(ticket.totalTime !== undefined && ticket.totalTime > 0) && (
+            <Badge variant="outline" className="text-[10px] uppercase font-bold px-1.5 shadow-sm bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800 flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {formatHours(ticket.totalTime)}
+            </Badge>
+          )}
+        </div>
         
         <div className="flex items-center space-x-3 text-muted-foreground">
           {ticket.images && ticket.images.length > 0 && (

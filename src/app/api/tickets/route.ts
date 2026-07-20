@@ -26,24 +26,7 @@ async function getTicketsHandler(req: AuthenticatedRequest) {
     const role = req.user?.role;
     const userId = req.user?.userId;
 
-    if (role === "Employee" && userId) {
-      const mongoose = require("mongoose");
-      const Project = require("@/models/Project").default;
-      const myProjects = await Project.find({ team: new mongoose.Types.ObjectId(userId) }).select('_id').lean();
-      const myProjectIds = myProjects.map((p: any) => p._id);
-      
-      if (projectId) {
-        if (myProjectIds.map((id: any) => id.toString()).includes(projectId)) {
-          query.projectId = projectId;
-        } else {
-          query.projectId = null; // Forces empty result if trying to access unauthorized project
-        }
-      } else {
-        query.projectId = { $in: myProjectIds };
-      }
-    } else {
-      if (projectId) query.projectId = projectId;
-    }
+    if (projectId) query.projectId = projectId;
 
     if (search) {
       query.$or = [
@@ -65,10 +48,26 @@ async function getTicketsHandler(req: AuthenticatedRequest) {
       .limit(limit)
       .lean();
 
+    const ticketIds = tickets.map((t: any) => t._id);
+    const TimeEntry = require("@/models/TimeEntry").default;
+    
+    // Dynamically calculate total tracked time for these tickets
+    const timeStats = await TimeEntry.aggregate([
+      { $match: { ticket: { $in: ticketIds } } },
+      { $group: { _id: "$ticket", totalTime: { $sum: "$hours" } } }
+    ]);
+    
+    const timeMap = new Map(timeStats.map((stat: any) => [stat._id.toString(), stat.totalTime]));
+    
+    const ticketsWithTime = tickets.map((t: any) => ({
+      ...t,
+      totalTime: timeMap.get(t._id.toString()) || 0
+    }));
+
     const total = await Ticket.countDocuments(query);
 
     return apiResponse.success("Tickets retrieved successfully", {
-      tickets,
+      tickets: ticketsWithTime,
       pagination: {
         total,
         page,

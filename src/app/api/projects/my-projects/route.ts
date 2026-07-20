@@ -105,7 +105,22 @@ async function getMyProjectsHandler(req: AuthenticatedRequest) {
 
     const projects = await Project.aggregate(pipeline);
 
-    return apiResponse.success("My Projects retrieved successfully", projects);
+    const projectIds = projects.map((p: any) => p._id);
+    const TimeEntry = require("@/models/TimeEntry").default;
+
+    const timeStats = await TimeEntry.aggregate([
+      { $match: { project: { $in: projectIds } } },
+      { $group: { _id: "$project", totalTime: { $sum: "$hours" } } }
+    ]);
+    
+    const timeMap = new Map(timeStats.map((stat: any) => [stat._id.toString(), stat.totalTime]));
+    
+    const projectsWithTime = projects.map((p: any) => ({
+      ...p,
+      totalTimeLogged: timeMap.get(p._id.toString()) || 0
+    }));
+
+    return apiResponse.success("My Projects retrieved successfully", projectsWithTime);
   } catch (error: any) {
     console.error("GET My Projects API Error:", error);
     return apiResponse.error("Internal Server Error", 500, { details: error.message });

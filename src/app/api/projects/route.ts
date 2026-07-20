@@ -146,8 +146,23 @@ async function getProjectsHandler(req: AuthenticatedRequest) {
     const projects = await Project.aggregate(pipeline);
     const total = await Project.countDocuments(query);
 
+    const projectIds = projects.map((p: any) => p._id);
+    const TimeEntry = require("@/models/TimeEntry").default;
+
+    const timeStats = await TimeEntry.aggregate([
+      { $match: { project: { $in: projectIds } } },
+      { $group: { _id: "$project", totalTime: { $sum: "$hours" } } }
+    ]);
+    
+    const timeMap = new Map(timeStats.map((stat: any) => [stat._id.toString(), stat.totalTime]));
+    
+    const projectsWithTime = projects.map((p: any) => ({
+      ...p,
+      totalTimeLogged: timeMap.get(p._id.toString()) || 0
+    }));
+
     return apiResponse.success("Projects retrieved successfully", {
-      projects,
+      projects: projectsWithTime,
       pagination: {
         total,
         page,

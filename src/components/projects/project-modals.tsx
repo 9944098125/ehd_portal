@@ -240,7 +240,7 @@ export function ProjectModals({
           setIsEditOpen(false);
         }
       }}>
-        <DialogContent className="max-w-[90vw] md:max-w-[80vw] w-[90vw] md:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
+        <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="max-w-[90vw] md:max-w-[80vw] w-[90vw] md:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
           <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-10">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">{isEditOpen ? "Edit Project" : "Create New Project"}</DialogTitle>
@@ -582,7 +582,7 @@ export function ProjectModals({
       </Dialog>
 
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
+        <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Delete Project</DialogTitle>
           </DialogHeader>
@@ -600,7 +600,7 @@ export function ProjectModals({
       </Dialog>
 
       <Dialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog(prev => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
+        <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="sm:max-w-md bg-white dark:bg-zinc-950 border-0 shadow-2xl rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-red-600">Error</DialogTitle>
           </DialogHeader>

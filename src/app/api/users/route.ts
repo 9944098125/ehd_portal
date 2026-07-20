@@ -41,10 +41,25 @@ async function getUsersHandler(req: AuthenticatedRequest) {
       .limit(limit)
       .lean();
 
+    const userIds = users.map((u: any) => u._id);
+    const TimeEntry = require("@/models/TimeEntry").default;
+    
+    const timeStats = await TimeEntry.aggregate([
+      { $match: { user: { $in: userIds } } },
+      { $group: { _id: "$user", totalTime: { $sum: "$hours" } } }
+    ]);
+    
+    const timeMap = new Map(timeStats.map((stat: any) => [stat._id.toString(), stat.totalTime]));
+    
+    const usersWithTime = users.map((u: any) => ({
+      ...u,
+      totalTimeLogged: timeMap.get(u._id.toString()) || 0
+    }));
+
     const total = await User.countDocuments(query);
 
     return apiResponse.success("Users retrieved successfully", {
-      users,
+      users: usersWithTime,
       pagination: {
         total,
         page,
