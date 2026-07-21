@@ -229,6 +229,35 @@ export const TicketModals: React.FC<TicketModalsProps> = ({ isOpen, onClose, mod
               </div>
             )}
 
+            {((user as any)?.role === 'SUPER_ADMIN' || (user as any)?.role === 'ADMIN') && (
+              <div>
+                <h4 className="text-sm font-semibold mb-3 flex items-center"><Users className="w-4 h-4 mr-2" /> Team Members</h4>
+                {ticket.assignees && ticket.assignees.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {ticket.assignees.map((emp: any) => (
+                      <div key={emp._id} className="flex items-center bg-zinc-50 dark:bg-zinc-900/50 text-zinc-800 dark:text-zinc-200 px-3 py-2 rounded-xl text-sm font-medium border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                        {emp.profileImage ? (
+                          <img src={emp.profileImage} alt={emp.firstName} className="w-8 h-8 rounded-full mr-3 object-cover shadow-sm" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 mr-3 flex items-center justify-center text-xs font-bold shadow-sm">
+                            {emp.firstName?.[0] || "?"}
+                          </div>
+                        )}
+                        <div className="flex flex-col">
+                           <span>{emp.firstName} {emp.lastName}</span>
+                           <span className="text-[10px] text-zinc-500 font-normal leading-none mt-0.5">{emp.department || "No Department"}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-zinc-500 italic bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                    No team members assigned to this ticket.
+                  </div>
+                )}
+              </div>
+            )}
+
             {ticket.images?.length > 0 && (
               <div>
                 <h4 className="text-sm font-semibold mb-3 flex items-center"><Paperclip className="w-4 h-4 mr-2" /> Attachments</h4>

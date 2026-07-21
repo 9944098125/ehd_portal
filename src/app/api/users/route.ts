@@ -82,7 +82,7 @@ async function createUserHandler(req: AuthenticatedRequest) {
     const currentUserRole = req.user?.role;
 
     // Role assignment based on logged-in user
-    let assignedRole = validatedData.role || "Employee";
+    const assignedRole = validatedData.role || "Employee";
     
     // Admins cannot create Super Admins or Admins
     if (currentUserRole === "Admin" && (assignedRole === "Super Admin" || assignedRole === "Admin")) {

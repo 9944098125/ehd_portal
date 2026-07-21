@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Ticket, BriefcaseBusiness, X } from "lucide-react";
+import { LayoutDashboard, Users, Ticket, BriefcaseBusiness, X, Clock, Settings, Banknote, CalendarDays } from "lucide-react";
 
 import { useAuthStore } from "@/store/authStore";
 
@@ -17,6 +17,9 @@ export default function AppSidebar({ isMobileOpen, isDesktopExpanded, onMobileCl
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, visible: true },
     { name: "Projects", href: "/projects", icon: BriefcaseBusiness, visible: user?.role === "Admin" || user?.role === "Super Admin" },
+    { name: "Timings", href: "/timings", icon: Clock, visible: true },
+    { name: "Payroll", href: "/payroll", icon: Banknote, visible: true },
+    { name: "Leaves", href: "/leaves", icon: CalendarDays, visible: true },
   ].filter(item => item.visible);
 
   return (
@@ -78,6 +81,7 @@ export default function AppSidebar({ isMobileOpen, isDesktopExpanded, onMobileCl
             })}
           </div>
         </div>
+
       </div>
     </aside>
   );

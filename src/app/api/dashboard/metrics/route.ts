@@ -12,7 +12,7 @@ async function getDashboardMetricsHandler(req: AuthenticatedRequest) {
     const role = req.user?.role;
     const userId = req.user?.userId;
     
-    let matchQuery: any = {};
+    const matchQuery: any = {};
     if (role === "Employee") {
       matchQuery.user = new mongoose.Types.ObjectId(userId);
     }

@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import connectToDatabase from "@/lib/db";
 import Ticket from "@/models/Ticket";
+import "@/models/Project";
+import "@/models/User";
 import { apiResponse } from "@/utils/apiResponse";
 import { withAuth, AuthenticatedRequest } from "@/middleware/auth";
 import { ticketSchema } from "@/validations/ticket";

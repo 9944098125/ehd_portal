@@ -43,6 +43,7 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  onInteractionOutside,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;

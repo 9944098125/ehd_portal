@@ -22,6 +22,13 @@ export const apiResponse = {
     );
   },
   
+  badRequest: <E = unknown>(message: string = 'Bad Request', errors?: E) => {
+    return NextResponse.json(
+      { success: false, message, errors },
+      { status: 400 }
+    );
+  },
+  
   unauthorized: (message: string = 'Unauthorized') => {
     return NextResponse.json(
       { success: false, message },

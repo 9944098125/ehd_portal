@@ -181,7 +181,6 @@ export function ProjectModals({
 
   const filteredEmployees = useMemo(() => {
     return users.filter((u) => 
-      u.role === "Employee" && 
       (u.firstName.toLowerCase().includes(employeeSearch.toLowerCase()) || 
        u.lastName.toLowerCase().includes(employeeSearch.toLowerCase()) ||
        u.email.toLowerCase().includes(employeeSearch.toLowerCase()))
@@ -485,7 +484,7 @@ export function ProjectModals({
 
                 <div className="space-y-6">
                   <div className="space-y-2 relative z-30">
-                    <label className="text-sm font-medium">Team Lead (Must be an Employee)</label>
+                    <label className="text-sm font-medium">Team Lead</label>
                     <Select 
                       value={formData.teamLead} 
                       onValueChange={handleTeamLeadSelect}
@@ -516,7 +515,7 @@ export function ProjectModals({
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent className="max-h-[250px]">
-                        {users.filter(u => u.role === "Employee").map(emp => (
+                        {users.map(emp => (
                           <SelectItem key={emp._id} value={emp._id}>
                             <div className="flex items-center gap-2">
                               <img 

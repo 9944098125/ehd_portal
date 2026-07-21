@@ -80,6 +80,15 @@ export default function ProjectDetailsPage() {
     return new Date(dateStr).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
+  const formatTime = (hours?: number) => {
+    if (!hours || hours <= 0) return "-";
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    if (h === 0) return `${m}m`;
+    if (m === 0) return `${h}h`;
+    return `${h}h ${m}m`;
+  };
+
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -141,22 +150,22 @@ export default function ProjectDetailsPage() {
               />
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
               <div className="flex flex-col p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl">
-                <span className="text-zinc-500 text-sm mb-1 flex items-center gap-1"><CircleDashed className="w-4 h-4" /> Total Tickets</span>
-                <span className="text-2xl font-bold">{project.totalTickets || 0}</span>
+                <span className="text-zinc-500 text-sm mb-1 flex items-center gap-1"><CircleDashed className="w-4 h-4 shrink-0" /> Total Tickets</span>
+                <span className="text-2xl font-bold truncate">{project.totalTickets || 0}</span>
               </div>
               <div className="flex flex-col p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl">
-                <span className="text-green-600 dark:text-green-400 text-sm mb-1 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Completed</span>
-                <span className="text-2xl font-bold text-green-700 dark:text-green-500">{project.completedTickets || 0}</span>
+                <span className="text-green-600 dark:text-green-400 text-sm mb-1 flex items-center gap-1"><CheckCircle2 className="w-4 h-4 shrink-0" /> Completed</span>
+                <span className="text-2xl font-bold text-green-700 dark:text-green-500 truncate">{project.completedTickets || 0}</span>
               </div>
               <div className="flex flex-col p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl">
-                <span className="text-amber-600 dark:text-amber-400 text-sm mb-1 flex items-center gap-1"><AlertCircle className="w-4 h-4" /> Remaining</span>
-                <span className="text-2xl font-bold text-amber-700 dark:text-amber-500">{(project.totalTickets || 0) - (project.completedTickets || 0)}</span>
+                <span className="text-amber-600 dark:text-amber-400 text-sm mb-1 flex items-center gap-1"><AlertCircle className="w-4 h-4 shrink-0" /> Remaining</span>
+                <span className="text-2xl font-bold text-amber-700 dark:text-amber-500 truncate">{(project.totalTickets || 0) - (project.completedTickets || 0)}</span>
               </div>
               <div className="flex flex-col p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl">
-                <span className="text-blue-600 dark:text-blue-400 text-sm mb-1 flex items-center gap-1"><CircleDashed className="w-4 h-4" /> Time Logged</span>
-                <span className="text-2xl font-bold text-blue-700 dark:text-blue-500">{(project.totalTimeLogged || 0) > 0 ? `${project.totalTimeLogged}h` : "-"}</span>
+                <span className="text-blue-600 dark:text-blue-400 text-sm mb-1 flex items-center gap-1"><CircleDashed className="w-4 h-4 shrink-0" /> Time Logged</span>
+                <span className="text-2xl font-bold text-blue-700 dark:text-blue-500 truncate">{formatTime(project.totalTimeLogged)}</span>
               </div>
             </div>
           </div>

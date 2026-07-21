@@ -60,15 +60,7 @@ export default function AppNavbar({ onMenuClick, onToggleSidebar }: AppNavbarPro
 
         {/* Right Side */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Search */}
-          <div className="relative hidden md:block group mr-2">
-            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              className="w-64 lg:w-72 pl-11 pr-4 py-2.5 rounded-full bg-secondary/50 border border-transparent text-sm focus:bg-background focus:border-ring/30 focus:ring-4 focus:ring-ring/10 outline-none transition-all duration-300 placeholder:text-muted-foreground text-foreground shadow-sm"
-            />
-          </div>
+
 
           <button className="relative p-2.5 rounded-full text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <Bell className="w-5 h-5" />

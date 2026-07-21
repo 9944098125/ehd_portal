@@ -12,7 +12,7 @@ async function getMyProjectsHandler(req: AuthenticatedRequest) {
     const role = req.user?.role;
     const userId = req.user?.userId;
 
-    let query: any = {};
+    const query: any = {};
 
     if (role === "Employee") {
       query.status = "ACTIVE";
