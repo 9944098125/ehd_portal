@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGO_URI!;
-
-if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGO_URI environment variable inside .env.local'
-  );
-}
+const getMongoUri = () => process.env.MONGO_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -25,6 +19,14 @@ if (!cached) {
 }
 
 async function connectToDatabase(): Promise<typeof mongoose> {
+  const uri = getMongoUri();
+  
+  if (!uri) {
+    throw new Error(
+      'Please define the MONGO_URI environment variable. If deploying to Vercel, add it in your project Settings > Environment Variables.'
+    );
+  }
+
   const cache = cached as MongooseCache;
 
   if (cache.conn) {
@@ -36,7 +38,7 @@ async function connectToDatabase(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cache.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
+    cache.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
       return mongooseInstance;
     });
   }
