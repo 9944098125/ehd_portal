@@ -19,6 +19,7 @@ export function SalaryStructureDialog({
 }) {
   const { createSalaryStructure, getSalaryStructure } = usePayrollStore();
   const [loading, setLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
   
   // State
   const [grossMonthly, setGrossMonthly] = useState("0");
@@ -29,13 +30,14 @@ export function SalaryStructureDialog({
   
   useEffect(() => {
     if (open && employeeId) {
+      setIsInitializing(true);
       getSalaryStructure(employeeId).then(struct => {
          if (struct) {
-            setGrossMonthly(struct.monthlyPay.toString());
-            setEmployeePF(struct.employeePF.toString());
-            setEmployerPF(struct.employerPF.toString());
-            setProfessionalTax(struct.professionalTax.toString());
-            setIncomeTax(struct.incomeTax.toString());
+            setGrossMonthly((struct.monthlyPay || 0).toString());
+            setEmployeePF((struct.employeePF ?? 1800).toString());
+            setEmployerPF((struct.employerPF ?? 1800).toString());
+            setProfessionalTax((struct.professionalTax ?? 200).toString());
+            setIncomeTax((struct.incomeTax || 0).toString());
          } else {
             setGrossMonthly("0"); 
             setEmployeePF("1800"); 
@@ -43,12 +45,16 @@ export function SalaryStructureDialog({
             setProfessionalTax("200");
             setIncomeTax("0");
          }
+         // Small delay to allow auto-calc to run once and then be overridden if needed
+         setTimeout(() => setIsInitializing(false), 50);
       });
     }
   }, [open, employeeId]);
 
   // Auto Tax Calculation Logic
   useEffect(() => {
+    if (isInitializing) return; // Prevent overwriting existing income tax on mount
+    
     const gross = parseFloat(grossMonthly) || 0;
     const annual = gross * 12;
     
@@ -60,7 +66,7 @@ export function SalaryStructureDialog({
     } else {
       setIncomeTax("0");
     }
-  }, [grossMonthly]);
+  }, [grossMonthly, isInitializing]);
 
   const handleSave = async () => {
     if (!employeeId) return;
@@ -69,10 +75,10 @@ export function SalaryStructureDialog({
       const mPay = parseFloat(grossMonthly) || 0;
       const pt = parseFloat(professionalTax) || 0;
       const ePF = parseFloat(employeePF) || 0;
-      const erPF = parseFloat(employerPF) || 0;
+      const erPF = ePF; // Always equal to employeePF
       const iTax = parseFloat(incomeTax) || 0;
       
-      const netSalary = mPay - ePF - pt - iTax;
+      const netSalary = mPay - (ePF * 2) - pt - iTax;
       
       await createSalaryStructure({
         employee: employeeId,
@@ -122,15 +128,17 @@ export function SalaryStructureDialog({
                   value={grossMonthly}
                   onChange={(e) => setGrossMonthly(e.target.value)}
                   disabled={loading}
-                  className="pl-9 h-11 text-lg font-semibold tracking-tight transition-all focus:ring-2 focus:ring-primary/20"
+                  className="pl-9 pr-14 h-11 text-lg font-semibold tracking-tight transition-all focus:ring-2 focus:ring-primary/20"
                 />
+                <span className="absolute right-3 text-xs text-muted-foreground font-medium pointer-events-none">/ month</span>
               </div>
             </div>
              <div className="grid gap-2 group">
                <label className="text-sm font-medium text-muted-foreground">Annual Est.</label>
                <div className="relative flex items-center">
                  <IndianRupee className="absolute left-3 h-3 w-3 text-muted-foreground" />
-                 <Input disabled value={((parseFloat(grossMonthly) || 0) * 12).toLocaleString('en-IN')} className="pl-8 h-11 bg-muted/30" />
+                 <Input disabled value={((parseFloat(grossMonthly) || 0) * 12).toLocaleString('en-IN')} className="pl-8 pr-12 h-11 bg-muted/30" />
+                 <span className="absolute right-3 text-xs text-muted-foreground font-medium pointer-events-none">/ year</span>
                </div>
              </div>
           </div>
@@ -140,14 +148,16 @@ export function SalaryStructureDialog({
                <label className="text-sm font-medium group-focus-within:text-amber-600 transition-colors">Employee PF</label>
                <div className="relative flex items-center">
                  <IndianRupee className="absolute left-3 h-3 w-3 text-amber-600/70 group-focus-within:text-amber-600 transition-colors" />
-                 <Input type="number" value={employeePF} onChange={(e) => setEmployeePF(e.target.value)} disabled={loading} className="pl-8 focus-visible:ring-amber-500/30 text-amber-700" />
+                 <Input type="number" value={employeePF} onChange={(e) => setEmployeePF(e.target.value)} disabled={loading} className="pl-8 pr-14 focus-visible:ring-amber-500/30 text-amber-700" />
+                 <span className="absolute right-3 text-[10px] text-amber-600/60 font-medium pointer-events-none">/ month</span>
                </div>
              </div>
              <div className="grid gap-2 group">
                <label className="text-sm font-medium group-focus-within:text-amber-600 transition-colors">Employer PF</label>
                <div className="relative flex items-center">
                  <IndianRupee className="absolute left-3 h-3 w-3 text-amber-600/70 group-focus-within:text-amber-600 transition-colors" />
-                 <Input type="number" value={employerPF} onChange={(e) => setEmployerPF(e.target.value)} disabled={loading} className="pl-8 focus-visible:ring-amber-500/30 text-amber-700" />
+                 <Input type="number" value={employeePF} disabled className="pl-8 pr-14 focus-visible:ring-amber-500/30 text-amber-700 bg-muted/50" />
+                 <span className="absolute right-3 text-[10px] text-amber-600/60 font-medium pointer-events-none">/ month</span>
                </div>
              </div>
           </div>
@@ -157,7 +167,8 @@ export function SalaryStructureDialog({
                <label className="text-sm font-medium group-focus-within:text-amber-600 transition-colors">Professional Tax</label>
                <div className="relative flex items-center">
                  <IndianRupee className="absolute left-3 h-3 w-3 text-amber-600/70 group-focus-within:text-amber-600 transition-colors" />
-                 <Input type="number" value={professionalTax} onChange={(e) => setProfessionalTax(e.target.value)} disabled={loading} className="pl-8 focus-visible:ring-amber-500/30 text-amber-700" />
+                 <Input type="number" value={professionalTax} onChange={(e) => setProfessionalTax(e.target.value)} disabled={loading} className="pl-8 pr-14 focus-visible:ring-amber-500/30 text-amber-700" />
+                 <span className="absolute right-3 text-[10px] text-amber-600/60 font-medium pointer-events-none">/ month</span>
                </div>
              </div>
              <div className="grid gap-2 group">
@@ -169,8 +180,9 @@ export function SalaryStructureDialog({
                    value={incomeTax}
                    onChange={(e) => setIncomeTax(e.target.value)}
                    disabled={loading}
-                   className="pl-8 focus-visible:ring-red-500/30 text-red-600 font-medium"
+                   className="pl-8 pr-14 focus-visible:ring-red-500/30 text-red-600 font-medium"
                  />
+                 <span className="absolute right-3 text-[10px] text-red-500/60 font-medium pointer-events-none">/ month</span>
                </div>
              </div>
           </div>
@@ -179,7 +191,8 @@ export function SalaryStructureDialog({
              <span className="font-semibold text-sm text-emerald-800 dark:text-emerald-300">Estimated Net Salary</span>
              <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight flex items-center gap-1">
                 <IndianRupee className="h-5 w-5" />
-                {((parseFloat(grossMonthly) || 0) - (parseFloat(employeePF) || 0) - (parseFloat(professionalTax) || 0) - (parseFloat(incomeTax) || 0)).toLocaleString('en-IN')}
+                {((parseFloat(grossMonthly) || 0) - ((parseFloat(employeePF) || 0) * 2) - (parseFloat(professionalTax) || 0) - (parseFloat(incomeTax) || 0)).toLocaleString('en-IN')}
+                <span className="text-sm font-medium text-emerald-600/70 dark:text-emerald-400/70 ml-1">/ month</span>
              </span>
           </div>
         </div>

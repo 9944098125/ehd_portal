@@ -5,6 +5,7 @@ import { Menu, Search, Bell, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { NotificationSheet } from "@/components/notifications/NotificationSheet";
 
 interface AppNavbarProps {
   onMenuClick: () => void;
@@ -62,10 +63,7 @@ export default function AppNavbar({ onMenuClick, onToggleSidebar }: AppNavbarPro
         <div className="flex items-center gap-2 sm:gap-4">
 
 
-          <button className="relative p-2.5 rounded-full text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-destructive border-2 border-background"></span>
-          </button>
+          <NotificationSheet />
 
           <div className="h-6 w-px bg-border mx-1"></div>
 

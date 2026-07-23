@@ -1,17 +1,27 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { AuthenticatedRequest, withAuth } from "@/middleware/auth";
+import { apiResponse } from "@/utils/apiResponse";
 import connectToDatabase from "@/lib/db";
 import Leave from "@/models/Leave";
-import { apiResponse } from "@/utils/apiResponse";
-import { withRole, AuthenticatedRequest } from "@/middleware/auth";
+import User from "@/models/User";
 
-async function getMyLeaves(req: AuthenticatedRequest) {
+const getMyLeavesHandler = async (req: AuthenticatedRequest) => {
   try {
     await connectToDatabase();
-    const leaves = await Leave.find({ employee: req.user?.userId }).sort({ createdAt: -1 }).lean();
-    return apiResponse.success("My leaves retrieved", { leaves });
-  } catch (error: any) {
-    return apiResponse.error("Error fetching leaves", 500, { details: error.message });
-  }
-}
+    
+    const currentUser = await User.findById(req.user?.userId);
+    if (!currentUser) return apiResponse.notFound("User not found");
 
-export const GET = withRole(["Super Admin", "Admin", "Employee"], getMyLeaves as any);
+    const leaves = await Leave.find({ employee: currentUser._id })
+      .populate("employee", "firstName lastName email department")
+      .populate("approver", "firstName lastName")
+      .populate("approvedBy", "firstName lastName")
+      .sort({ createdAt: -1 });
+
+    return apiResponse.success("My leaves retrieved", { leaves, total: leaves.length });
+  } catch (error: any) {
+    return apiResponse.error(error.message);
+  }
+};
+
+export const GET = withAuth(getMyLeavesHandler as any);

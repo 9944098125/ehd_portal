@@ -2,16 +2,22 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface ILeave extends Document {
   employee: mongoose.Types.ObjectId;
-  leaveType: "Sick" | "Casual" | "Earned" | "Maternity" | "Paternity" | "Unpaid";
-  startDate: Date;
-  endDate: Date;
-  days: number;
+  approver?: mongoose.Types.ObjectId;
+  fromDate: Date;
+  toDate: Date;
+  leaveType: "Casual Leave" | "Sick Leave" | "LOP";
+  fromHalf: "FIRST_HALF" | "SECOND_HALF" | "FULL_DAY";
+  toHalf: "FIRST_HALF" | "SECOND_HALF" | "FULL_DAY";
+  totalDays: number;
   reason: string;
-  status: "Pending" | "Approved" | "Rejected" | "Cancelled";
+  contactNumber: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+  approvedAt?: Date;
+  rejectedAt?: Date;
   approvedBy?: mongoose.Types.ObjectId;
   remarks?: string;
-  createdBy: mongoose.Types.ObjectId;
-  updatedBy: mongoose.Types.ObjectId;
+  createdBy?: mongoose.Types.ObjectId;
+  updatedBy?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,20 +30,37 @@ const leaveSchema = new Schema<ILeave>(
       required: true,
       index: true,
     },
+    approver: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+    },
+    fromDate: {
+      type: Date,
+      required: true,
+      index: true,
+    },
+    toDate: {
+      type: Date,
+      required: true,
+      index: true,
+    },
     leaveType: {
       type: String,
-      enum: ["Sick", "Casual", "Earned", "Maternity", "Paternity", "Unpaid"],
+      enum: ["Casual Leave", "Sick Leave", "LOP"],
       required: true,
     },
-    startDate: {
-      type: Date,
-      required: true,
-    },
-    endDate: {
-      type: Date,
-      required: true,
-    },
-    days: {
+  fromHalf: {
+    type: String,
+    enum: ["FULL_DAY", "FIRST_HALF", "SECOND_HALF"],
+    required: true,
+  },
+  toHalf: {
+    type: String,
+    enum: ["FULL_DAY", "FIRST_HALF", "SECOND_HALF"],
+    required: true,
+  },
+  totalDays: {
       type: Number,
       required: true,
       min: 0.5,
@@ -47,11 +70,21 @@ const leaveSchema = new Schema<ILeave>(
       required: true,
       maxlength: 1000,
     },
+    contactNumber: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected", "Cancelled"],
-      default: "Pending",
+      enum: ["PENDING", "APPROVED", "REJECTED", "CANCELLED"],
+      default: "PENDING",
       index: true,
+    },
+    approvedAt: {
+      type: Date,
+    },
+    rejectedAt: {
+      type: Date,
     },
     approvedBy: {
       type: Schema.Types.ObjectId,

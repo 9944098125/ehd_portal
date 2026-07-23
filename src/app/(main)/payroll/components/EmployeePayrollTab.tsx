@@ -74,9 +74,12 @@ export function EmployeePayrollTab() {
                     <div className="bg-emerald-100 dark:bg-emerald-900/60 p-1.5 rounded-md text-emerald-700 dark:text-emerald-400">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-indian-rupee"><path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/></svg>
                     </div>
-                    <span className="text-3xl font-black tracking-tight text-emerald-700 dark:text-emerald-400">
-                      {payslip.netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-black tracking-tight text-emerald-700 dark:text-emerald-400">
+                        {payslip.netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                      <span className="text-sm font-medium text-emerald-600/70 dark:text-emerald-400/70 ml-1">/ month</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -126,31 +129,40 @@ export function EmployeePayrollTab() {
               <div className="p-6 space-y-6 text-sm">
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-gray-600">Basic Pay</span>
-                  <span className="font-medium">{formatCurrency(printingPayslip.basicPay)}</span>
+                  <span className="font-medium">{formatCurrency(printingPayslip.basicPay)} <span className="text-xs font-normal text-gray-400">/ month</span></span>
                 </div>
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-gray-600">HRA</span>
-                  <span className="font-medium">{formatCurrency(printingPayslip.hra)}</span>
+                  <span className="font-medium">{formatCurrency(printingPayslip.hra)} <span className="text-xs font-normal text-gray-400">/ month</span></span>
                 </div>
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-gray-600">Other Allowances</span>
-                  <span className="font-medium">{formatCurrency(printingPayslip.otherAllowances)}</span>
+                  <span className="font-medium">{formatCurrency(printingPayslip.otherAllowances)} <span className="text-xs font-normal text-gray-400">/ month</span></span>
                 </div>
                 <div className="flex justify-between border-b pb-2 text-red-600">
                   <span>Employee PF Deduction</span>
-                  <span>- {formatCurrency(printingPayslip.employeePF)}</span>
+                  <span>- {formatCurrency(printingPayslip.employeePF)} <span className="text-xs font-normal text-red-400">/ month</span></span>
                 </div>
+                {printingPayslip.employerPF > 0 && (
+                  <div className="flex justify-between border-b pb-2 text-red-600">
+                    <span>Employer PF Deduction</span>
+                    <span>- {formatCurrency(printingPayslip.employerPF)} <span className="text-xs font-normal text-red-400">/ month</span></span>
+                  </div>
+                )}
                 <div className="flex justify-between border-b pb-2 text-red-600">
                   <span>Income Tax (TDS)</span>
-                  <span>- {formatCurrency(printingPayslip.incomeTax)}</span>
+                  <span>- {formatCurrency(printingPayslip.incomeTax)} <span className="text-xs font-normal text-red-400">/ month</span></span>
                 </div>
                 <div className="flex justify-between border-b pb-2 text-red-600">
                   <span>Professional Tax</span>
-                  <span>- {formatCurrency(printingPayslip.professionalTax)}</span>
+                  <span>- {formatCurrency(printingPayslip.professionalTax)} <span className="text-xs font-normal text-red-400">/ month</span></span>
                 </div>
                 <div className="flex justify-between pt-4">
                   <span className="text-lg font-bold text-gray-900">Net Salary</span>
-                  <span className="text-xl font-black text-gray-900">{formatCurrency(printingPayslip.netSalary)}</span>
+                  <span className="text-xl font-black text-gray-900 flex items-baseline gap-1">
+                    {formatCurrency(printingPayslip.netSalary)}
+                    <span className="text-sm font-medium text-gray-500">/ month</span>
+                  </span>
                 </div>
               </div>
             </div>

@@ -34,11 +34,9 @@ export default function LeavesPage() {
           <p className="text-muted-foreground mt-1">Manage your leaves and approvals.</p>
         </div>
         <Dialog open={isApplyOpen} onOpenChange={setIsApplyOpen}>
-          <DialogTrigger render={
-            <Button size="lg" className="rounded-none h-14 px-8 text-lg shadow-sm">
-              <Plus className="mr-2 h-5 w-5" /> {user?.role === "Super Admin" ? "Confirm Leave" : "Apply Leave"}
-            </Button>
-          } />
+          <DialogTrigger render={<Button />}>
+            <Plus className="mr-2 h-4 w-4" /> {user?.role === "Super Admin" ? "Confirm Leave" : "Apply Leave"}
+          </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]" onInteractionOutside={(e) => e.preventDefault()}>
             <DialogHeader>
               <DialogTitle>{user?.role === "Super Admin" ? "Confirm Leave" : "Apply for Leave"}</DialogTitle>

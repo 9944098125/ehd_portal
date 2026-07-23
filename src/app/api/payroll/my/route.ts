@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import connectToDatabase from "@/lib/db";
 import Payroll from "@/models/Payroll";
+import "@/models/SalaryStructure";
 import { apiResponse } from "@/utils/apiResponse";
 import { withRole, AuthenticatedRequest } from "@/middleware/auth";
 
