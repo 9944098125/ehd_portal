@@ -169,7 +169,11 @@ export default function ProfilePage() {
       });
 
       // Fetch total time logged
-      fetch("/api/time-entries/total")
+      fetch("/api/time-entries/total", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
         .then(res => res.json())
         .then(data => {
           if (data.success) {
@@ -178,7 +182,7 @@ export default function ProfilePage() {
         })
         .catch(err => console.error("Failed to fetch total time:", err));
     }
-  }, [user]);
+  }, [user, accessToken]);
 
   const handleFieldSave = async (field: string, newValue: string) => {
     setMessage({ type: "", text: "" });
@@ -315,7 +319,7 @@ export default function ProfilePage() {
               <ReadOnlyField label="Role" value={formData.role} />
               <ReadOnlyField label="Department" value={formData.department} />
               <ReadOnlyField label="Designation" value={formData.designation} />
-              <ReadOnlyField label="Total Time Logged" value={totalTime !== null ? `${totalTime} hrs` : "Loading..."} />
+              <ReadOnlyField label="Total Time Spent" value={totalTime !== null ? `${totalTime} hrs` : "Loading..."} />
             </div>
           </div>
 
