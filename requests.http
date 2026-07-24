@@ -5,10 +5,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "employeeId": "SA-00",
+  "employeeId": "SA-01",
   "firstName": "Srinivas",
   "lastName": "Akella",
-  "email": "srinivas.a@yopmail.com",
+  "email": "srinivas72075@cmail.com",
   "phone": "7995643201",
   "password": "$2b$10$sc47wAfaV4P/QJJiNybKvud2E0IItaa04ihW8r/WLBpk2zMdA.5Sy",
   "role": "Super Admin",

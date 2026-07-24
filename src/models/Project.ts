@@ -45,7 +45,7 @@ const ProjectSchema = new Schema<IProject>(
       type: String,
       required: true,
       minlength: 10,
-      maxlength: 1000,
+      maxlength: 3000,
     },
     status: {
       type: String,

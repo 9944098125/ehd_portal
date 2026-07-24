@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Notification } from '@/types/leave';
 import { useAuthStore } from './authStore';
+import { toast } from 'sonner';
 
 interface NotificationState {
   notifications: Notification[];
@@ -57,6 +58,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       });
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to mark as read", { description: error.message });
     }
   },
 
@@ -73,8 +75,10 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
         unreadCount: 0,
       }));
+      toast.success("All caught up", { description: "All notifications marked as read." });
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to mark all as read", { description: error.message });
     }
   },
 

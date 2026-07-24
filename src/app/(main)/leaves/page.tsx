@@ -35,8 +35,8 @@ export default function LeavesPage() {
         </div>
         <Dialog open={isApplyOpen} onOpenChange={setIsApplyOpen}>
           <DialogTrigger render={
-            <Button size="lg" className="rounded-none h-14 px-8 text-lg shadow-sm">
-              <Plus className="mr-2 h-5 w-5" /> {user?.role === "Super Admin" ? "Confirm Leave" : "Apply Leave"}
+            <Button className="gap-2 h-11 px-6">
+              <Plus className="w-4 h-4" /> {user?.role === "Super Admin" ? "Confirm Leave" : "Apply Leave"}
             </Button>
           } />
           <DialogContent className="sm:max-w-[500px]" onInteractionOutside={(e) => e.preventDefault()}>

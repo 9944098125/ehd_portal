@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { fetchApi } from "@/services/api";
 import { ISalaryStructure, IPayroll, IEmployeePayrollInfo } from "@/types/payroll";
+import { toast } from 'sonner';
 
 interface PayrollState {
   employees: IEmployeePayrollInfo[];
@@ -33,6 +34,7 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
       set({ employees: data.data.employees, pagination: data.data.pagination, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to load employees", { description: error.message });
     }
   },
 
@@ -43,6 +45,7 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
       set({ myPayslips: data.data.payslips, pagination: data.data.pagination, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to load payslips", { description: error.message });
     }
   },
 
@@ -54,6 +57,7 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
       return data.data.structure;
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to load salary structure", { description: error.message });
       return null;
     }
   },
@@ -66,8 +70,10 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
         body: JSON.stringify(postData),
       });
       set({ isLoading: false });
+      toast.success("Salary structure created", { description: "The structure has been successfully saved." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to create structure", { description: error.message });
       throw error;
     }
   },
@@ -86,8 +92,10 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
         ),
         isLoading: false
       }));
+      toast.success("Salary credited", { description: "The salary has been successfully processed." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to credit salary", { description: error.message });
       throw error;
     }
   },
@@ -100,9 +108,11 @@ export const usePayrollStore = create<PayrollState>((set, get) => ({
         body: JSON.stringify({ month, year }),
       });
       set({ isLoading: false });
+      toast.success("Salaries processed", { description: "All eligible salaries have been credited." });
       return data.data; // { totalEmployees, successCount, skippedCount }
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to process salaries", { description: error.message });
       throw error;
     }
   }

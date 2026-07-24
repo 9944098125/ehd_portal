@@ -240,6 +240,7 @@ export function ProjectModals({
         }
       }}>
         <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="max-w-[90vw] md:max-w-[80vw] w-[90vw] md:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
+          <form onSubmit={(e) => { e.preventDefault(); if (!(isSubmitting || !formData.name || !formData.code || !formData.description)) handleSubmit(); }}>
           <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-10">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">{isEditOpen ? "Edit Project" : "Create New Project"}</DialogTitle>
@@ -515,7 +516,7 @@ export function ProjectModals({
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent className="max-h-[250px]">
-                        {users.map(emp => (
+                        {users.filter(u => u.role === "Employee").map(emp => (
                           <SelectItem key={emp._id} value={emp._id}>
                             <div className="flex items-center gap-2">
                               <img 
@@ -569,14 +570,15 @@ export function ProjectModals({
           </div>
 
           <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-t border-zinc-200 dark:border-zinc-800 sticky bottom-0 z-10 flex justify-end gap-3">
-            <Button variant="outline" className="h-11 px-6" onClick={() => { setIsCreateOpen(false); setIsEditOpen(false); }}>
+            <Button variant="outline" type="button" className="h-11 px-6" onClick={() => { setIsCreateOpen(false); setIsEditOpen(false); }}>
               Cancel
             </Button>
-            <Button className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleSubmit} disabled={isSubmitting || !formData.name || !formData.code || !formData.description}>
+            <Button type="submit" className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white" disabled={isSubmitting || !formData.name || !formData.code || !formData.description}>
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {isEditOpen ? "Update Project" : "Create Project"}
             </Button>
           </div>
+          </form>
         </DialogContent>
       </Dialog>
 

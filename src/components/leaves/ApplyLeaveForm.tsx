@@ -210,7 +210,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full pl-3 text-left font-normal h-12 rounded-none",
+                        "w-full pl-3 text-left font-normal h-11",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -278,7 +278,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
                         <p className="text-sm text-red-500 font-medium">{fromError}</p>
                       )}
 
-                      <Button type="button" onClick={handleFromChoose} className="w-full h-12 rounded-none">
+                      <Button type="button" onClick={handleFromChoose} className="w-full h-11">
                         Choose
                       </Button>
                     </div>
@@ -300,7 +300,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full pl-3 text-left font-normal h-12 rounded-none",
+                        "w-full pl-3 text-left font-normal h-11",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -368,7 +368,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
                         <p className="text-sm text-red-500 font-medium">{toError}</p>
                       )}
 
-                      <Button type="button" onClick={handleToChoose} className="w-full h-12 rounded-none">
+                      <Button type="button" onClick={handleToChoose} className="w-full h-11">
                         Choose
                       </Button>
                     </div>
@@ -398,7 +398,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
                 <FormLabel>Leave Type</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="h-12 rounded-none">
+                    <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select leave type" />
                     </SelectTrigger>
                   </FormControl>
@@ -420,7 +420,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormItem>
                 <FormLabel>Emergency Contact</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter contact number" className="h-12 rounded-none" {...field} />
+                  <Input placeholder="Enter contact number" className="h-11" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -439,7 +439,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormControl>
                 <Textarea 
                   placeholder="Please provide a detailed reason..." 
-                  className="resize-none h-32 rounded-none"
+                  className="resize-none min-h-[100px]"
                   {...field} 
                 />
               </FormControl>
@@ -448,7 +448,7 @@ export function ApplyLeaveForm({ onSuccess }: { onSuccess?: () => void }) {
           )}
         />
 
-        <Button type="submit" size="lg" className="w-full h-14 text-lg rounded-none shadow-sm" disabled={isLoading}>
+        <Button type="submit" className="w-full h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

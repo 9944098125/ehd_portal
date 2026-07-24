@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getProjects, createProject, updateProject, deleteProject, getMyProjects } from "@/services/project.service";
+import { toast } from 'sonner';
 
 export interface ProjectType {
   _id: string;
@@ -61,6 +62,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch projects", { description: error.message });
     }
   },
 
@@ -71,6 +73,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       set({ myProjects: response.data, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch your projects", { description: error.message });
     }
   },
 
@@ -83,8 +86,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         total: state.total + 1,
         isLoading: false,
       }));
+      toast.success("Project created", { description: "The new project has been successfully added." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to create project", { description: error.message });
       throw error;
     }
   },
@@ -97,8 +102,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         projects: state.projects.map((p) => (p._id === id ? response.data : p)),
         isLoading: false,
       }));
+      toast.success("Project updated", { description: "Project details have been saved." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to update project", { description: error.message });
       throw error;
     }
   },
@@ -112,8 +119,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         total: state.total - 1,
         isLoading: false,
       }));
+      toast.success("Project deleted", { description: "The project has been permanently removed." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to delete project", { description: error.message });
       throw error;
     }
   },

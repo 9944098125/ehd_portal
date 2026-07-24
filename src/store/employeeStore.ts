@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getUsers, createUser, updateUser, deleteUser } from "@/services/user.service";
+import { toast } from 'sonner';
 
 interface EmployeeState {
   users: any[];
@@ -23,6 +24,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       set({ users: response.data.users, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch users", { description: error.message });
     }
   },
 
@@ -34,8 +36,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         users: [response.data, ...state.users],
         isLoading: false,
       }));
+      toast.success("User added", { description: "Employee has been successfully added." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to add user", { description: error.message });
       throw error;
     }
   },
@@ -48,8 +52,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         users: state.users.map((u) => (u._id === id ? response.data : u)),
         isLoading: false,
       }));
+      toast.success("User updated", { description: "Employee details have been saved." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to update user", { description: error.message });
       throw error;
     }
   },
@@ -62,8 +68,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         users: state.users.filter((u) => u._id !== id),
         isLoading: false,
       }));
+      toast.success("User deleted", { description: "Employee has been successfully removed." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to delete user", { description: error.message });
       throw error;
     }
   },

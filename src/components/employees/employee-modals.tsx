@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useEmployeeStore } from "@/store/employeeStore";
-import { UserPlus, Mail, Phone, Briefcase, Hash, Shield, Building2 } from "lucide-react";
+import { UserPlus, Mail, Phone, Briefcase, Hash, Shield, Building2, Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -19,6 +19,7 @@ interface EmployeeModalsProps {
 
 export const EmployeeModals: React.FC<EmployeeModalsProps> = ({ isOpen, onClose, mode, employee }) => {
   const { addUser, editUser } = useEmployeeStore();
+  const [showPassword, setShowPassword] = useState(false);
   
   const [formData, setFormData] = useState({
     firstName: "",
@@ -90,6 +91,7 @@ export const EmployeeModals: React.FC<EmployeeModalsProps> = ({ isOpen, onClose,
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent onInteractionOutside={(e) => { e.stopPropagation(); }} className="max-w-[80vw] sm:max-w-[80vw] w-[80vw] sm:w-[80vw] bg-white dark:bg-zinc-950 max-h-[90vh] overflow-y-auto border-0 shadow-2xl rounded-2xl p-0">
+        <form onSubmit={(e) => { e.preventDefault(); if (!(isSubmitting || !formData.firstName || !formData.lastName || !formData.email || !formData.department || !formData.designation || (mode === "create" && !formData.password))) handleSubmit(); }}>
         <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-b border-zinc-200 dark:border-zinc-800">
           <DialogHeader>
             <div className="flex items-center space-x-3">
@@ -208,22 +210,38 @@ export const EmployeeModals: React.FC<EmployeeModalsProps> = ({ isOpen, onClose,
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Password {mode === "edit" ? "(Leave blank to keep current)" : "*"}</label>
-                <Input className="h-11" type="password" placeholder="••••••••" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} />
+                <div className="relative">
+                  <Input 
+                    className="h-11 pr-10" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="••••••••" 
+                    value={formData.password} 
+                    onChange={e => setFormData({ ...formData, password: e.target.value })} 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
         
         <div className="p-6 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end space-x-3 rounded-b-2xl">
-          <Button variant="outline" className="h-11 px-6" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
+          <Button variant="outline" type="button" className="h-11 px-6" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
           <Button 
+            type="submit"
             className="h-11 px-8 bg-indigo-600 hover:bg-indigo-700 text-white" 
-            onClick={handleSubmit} 
             disabled={isSubmitting || !formData.firstName || !formData.lastName || !formData.email || !formData.department || !formData.designation || (mode === "create" && !formData.password)}
           >
             {isSubmitting ? "Saving..." : (mode === "create" ? "Add Employee" : "Save Changes")}
           </Button>
         </div>
+        </form>
       </DialogContent>
     </Dialog>
 

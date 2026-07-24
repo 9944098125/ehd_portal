@@ -287,7 +287,7 @@ export const TicketModals: React.FC<TicketModalsProps> = ({ isOpen, onClose, mod
             {canTrackTime && <TimeTrackingSection ticketId={ticket._id} />}
           </div>
         ) : (
-          <div className="p-6 md:p-8 space-y-8">
+          <form onSubmit={(e) => { e.preventDefault(); if (!(isSubmitting || isUploading || !formData.title || !formData.projectId || !formData.content)) handleSubmit(); }} className="p-6 md:p-8 space-y-8">
             {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2 md:col-span-2">
@@ -523,16 +523,16 @@ export const TicketModals: React.FC<TicketModalsProps> = ({ isOpen, onClose, mod
             </div>
 
             <div className="bg-zinc-50 dark:bg-zinc-900/50 -mx-6 md:-mx-8 -mb-6 md:-mb-8 p-6 md:p-8 mt-8 border-t border-zinc-200 dark:border-zinc-800 flex justify-end space-x-3 rounded-b-2xl">
-              <Button variant="outline" className="h-11 px-6" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
+              <Button variant="outline" type="button" className="h-11 px-6" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
               <Button 
+                type="submit"
                 className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={handleSubmit} 
                 disabled={isSubmitting || isUploading || !formData.title || !formData.projectId || !formData.content}
               >
                 {isSubmitting ? "Saving..." : (mode === "create" ? "Create Ticket" : "Save Changes")}
               </Button>
             </div>
-          </div>
+          </form>
         )}
       </DialogContent>
     </Dialog>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { LeaveBalance } from '@/types/leave';
 import { leaveService } from '@/services/leave.service';
+import { toast } from 'sonner';
 
 interface LeaveBalanceState {
   balance: LeaveBalance | null;
@@ -23,6 +24,7 @@ export const useLeaveBalanceStore = create<LeaveBalanceState>((set) => ({
       set({ balance, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch leave balance", { description: error.message });
     }
   },
 

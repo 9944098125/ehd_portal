@@ -85,6 +85,7 @@ export function AdminPayrollTab() {
            <div className="flex text-xs text-muted-foreground uppercase font-medium">
              <div className="flex-[2] min-w-[200px] px-6 py-4">Employee</div>
              <div className="flex-1 min-w-[150px] px-6 py-4">Department</div>
+             <div className="flex-1 min-w-[120px] px-6 py-4 text-right">Pay</div>
              <div className="flex-1 min-w-[120px] px-6 py-4 text-center">Structure</div>
              <div className="flex-1 min-w-[120px] px-6 py-4 text-center">Current Month</div>
              <div className="w-[180px] px-6 py-4 text-right">Actions</div>
@@ -140,6 +141,20 @@ export function AdminPayrollTab() {
                     <div className="flex-1 min-w-[150px] px-6">
                       <div className="truncate">{emp.department}</div>
                       <div className="text-xs text-muted-foreground truncate">{emp.designation}</div>
+                    </div>
+                    <div className="flex-1 min-w-[120px] px-6 text-right">
+                      {hasStructure ? (
+                        <>
+                          <div className="font-medium text-emerald-600 dark:text-emerald-400">
+                            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(emp.salaryStructure?.monthlyPay || 0)}
+                            <span className="text-[10px] font-normal text-muted-foreground ml-1">/mo</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-0.5">
+                            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(emp.salaryStructure?.annualPay || 0)}
+                            <span className="text-[10px] font-normal ml-1">/yr</span>
+                          </div>
+                        </>
+                      ) : '-'}
                     </div>
                     <div className="flex-1 min-w-[120px] px-6 text-center">
                       <span className={`px-2 py-1 text-[10px] font-semibold rounded-full ${hasStructure ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-800'}`}>

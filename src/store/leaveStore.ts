@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Leave, LeaveFilters, LeaveRequest } from '@/types/leave';
 import { leaveService } from '@/services/leave.service';
+import { toast } from 'sonner';
 
 interface LeaveState {
   leaves: Leave[];
@@ -38,6 +39,7 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
       set({ leaves, totalCount: total, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch leaves", { description: error.message });
     }
   },
 
@@ -48,6 +50,7 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
       set({ myLeaves: leaves, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch your leaves", { description: error.message });
     }
   },
 
@@ -58,6 +61,7 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
       set({ pendingLeaves: leaves, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch pending leaves", { description: error.message });
     }
   },
 
@@ -68,6 +72,7 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
       set({ historyLeaves: leaves, totalCount: total, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch history leaves", { description: error.message });
     }
   },
 
@@ -80,8 +85,10 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
         historyLeaves: [leave, ...state.historyLeaves],
         isLoading: false,
       }));
+      toast.success("Leave applied", { description: "Your leave request has been submitted." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to apply leave", { description: error.message });
       throw error;
     }
   },
@@ -96,8 +103,10 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
         historyLeaves: state.historyLeaves.map((l) => (l._id === id ? leave : l)),
         isLoading: false,
       }));
+      toast.success("Leave approved", { description: "The leave request has been approved." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to approve leave", { description: error.message });
       throw error;
     }
   },
@@ -112,8 +121,10 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
         historyLeaves: state.historyLeaves.map((l) => (l._id === id ? leave : l)),
         isLoading: false,
       }));
+      toast.success("Leave rejected", { description: "The leave request has been rejected." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to reject leave", { description: error.message });
       throw error;
     }
   },
@@ -128,8 +139,10 @@ export const useLeaveStore = create<LeaveState>((set, get) => ({
         pendingLeaves: state.pendingLeaves.filter((l) => l._id !== id),
         isLoading: false,
       }));
+      toast.success("Leave cancelled", { description: "Your leave request has been cancelled." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to cancel leave", { description: error.message });
       throw error;
     }
   },

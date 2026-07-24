@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { TimeEntry, CreateTimeEntryPayload, UpdateTimeEntryPayload } from "@/types/timeTracking";
 import { fetchApi } from "@/services/api";
+import { toast } from 'sonner';
 
 interface TimeTrackingState {
   entries: TimeEntry[];
@@ -36,9 +37,10 @@ export const useTimeTrackingStore = create<TimeTrackingState>((set, get) => ({
       });
 
       set({ entries: fetchedEntries, totalTime: total, myTime: myTotal, loading: false });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       set({ loading: false });
+      toast.error("Failed to load time logs", { description: error.message });
     }
   },
 
@@ -50,7 +52,9 @@ export const useTimeTrackingStore = create<TimeTrackingState>((set, get) => ({
       });
 
       await get().fetchLogs(payload.ticket, userId);
+      toast.success("Time log added", { description: "Your time has been successfully logged." });
     } catch (error: any) {
+      toast.error("Failed to add time log", { description: error.message });
       throw error;
     }
   },
@@ -66,7 +70,9 @@ export const useTimeTrackingStore = create<TimeTrackingState>((set, get) => ({
       if (state.entries.length > 0) {
         await state.fetchLogs(state.entries[0].ticket._id || state.entries[0].ticket, userId);
       }
+      toast.success("Time log updated", { description: "The time log has been modified." });
     } catch (error: any) {
+      toast.error("Failed to update time log", { description: error.message });
       throw error;
     }
   },
@@ -81,7 +87,9 @@ export const useTimeTrackingStore = create<TimeTrackingState>((set, get) => ({
       if (state.entries.length > 0) {
         await state.fetchLogs(state.entries[0].ticket._id || state.entries[0].ticket);
       }
+      toast.success("Time log deleted", { description: "The time log has been removed." });
     } catch (error: any) {
+      toast.error("Failed to delete time log", { description: error.message });
       throw error;
     }
   },

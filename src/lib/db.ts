@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-const getMongoUri = () => process.env.MONGO_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -19,7 +18,7 @@ if (!cached) {
 }
 
 async function connectToDatabase(): Promise<typeof mongoose> {
-  const uri = getMongoUri();
+  const uri = process.env.MONGO_URI;
   
   if (!uri) {
     throw new Error(

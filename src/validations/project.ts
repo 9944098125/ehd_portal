@@ -3,7 +3,7 @@ import { z } from "zod";
 const projectBaseSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters").max(100, "Name must be at most 100 characters").trim(),
   code: z.string().min(1, "Code is required").toUpperCase().trim(),
-  description: z.string().min(10, "Description must be at least 10 characters").max(1000, "Description must be at most 1000 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters").max(3000, "Description must be at most 3000 characters"),
   status: z.enum(["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED", "ARCHIVED"]).optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
   team: z.array(z.string()).optional(),

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useAuthStore } from "./authStore";
+import { toast } from 'sonner';
 
 export interface TicketTimingSummary {
   _id: string;
@@ -162,6 +163,7 @@ export const useTimingsStore = create<TimingsState & TimingsActions>((set, get) 
       });
     } catch (error: any) {
       set({ error: error.message, isMyLoading: false });
+      toast.error("Failed to load your timings", { description: error.message });
     }
   },
 
@@ -200,6 +202,7 @@ export const useTimingsStore = create<TimingsState & TimingsActions>((set, get) 
       });
     } catch (error: any) {
       set({ error: error.message, isTeamLoading: false });
+      toast.error("Failed to load team timings", { description: error.message });
     }
   },
 
@@ -241,6 +244,7 @@ export const useTimingsStore = create<TimingsState & TimingsActions>((set, get) 
       }));
     } catch (error: any) {
       set({ error: error.message, isFetchingNextTeamPage: false });
+      toast.error("Failed to load more timings", { description: error.message });
     }
   },
 

@@ -110,6 +110,7 @@ export function SalaryStructureDialog({
       <DialogContent 
         className="sm:max-w-[500px]"
       >
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
         <DialogHeader>
           <DialogTitle>Salary Structure</DialogTitle>
           <DialogDescription>
@@ -198,11 +199,12 @@ export function SalaryStructureDialog({
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>Cancel</Button>
-          <Button onClick={handleSave} disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 shadow-md">
+          <Button variant="outline" type="button" onClick={() => onOpenChange(false)} disabled={loading}>Cancel</Button>
+          <Button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 shadow-md">
             {loading ? "Saving..." : "Save Structure"}
           </Button>
         </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

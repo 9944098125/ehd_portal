@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getTickets, createTicket, updateTicket, deleteTicket } from "@/services/ticket.service";
+import { toast } from 'sonner';
 
 interface TicketState {
   tickets: any[];
@@ -24,6 +25,7 @@ export const useTicketStore = create<TicketState>((set, get) => ({
       set({ tickets: response.data.tickets, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to fetch tickets", { description: error.message });
     }
   },
 
@@ -35,8 +37,10 @@ export const useTicketStore = create<TicketState>((set, get) => ({
         tickets: [response.data, ...state.tickets],
         isLoading: false,
       }));
+      toast.success("Ticket created", { description: "Your new ticket has been submitted." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to create ticket", { description: error.message });
       throw error;
     }
   },
@@ -49,8 +53,10 @@ export const useTicketStore = create<TicketState>((set, get) => ({
         tickets: state.tickets.map((t) => (t._id === id ? response.data : t)),
         isLoading: false,
       }));
+      toast.success("Ticket updated", { description: "The ticket details have been saved." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to update ticket", { description: error.message });
       throw error;
     }
   },
@@ -63,8 +69,10 @@ export const useTicketStore = create<TicketState>((set, get) => ({
         tickets: state.tickets.filter((t) => t._id !== id),
         isLoading: false,
       }));
+      toast.success("Ticket deleted", { description: "The ticket has been permanently removed." });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      toast.error("Failed to delete ticket", { description: error.message });
       throw error;
     }
   },

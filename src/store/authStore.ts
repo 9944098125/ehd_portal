@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { authService } from '@/services/auth.service';
 import { User, LoginCredentials } from '@/types/auth';
+import { toast } from 'sonner';
 
 const customStorage: StateStorage = {
   getItem: (name) => {
@@ -61,6 +62,7 @@ export const useAuthStore = create<AuthState>()(
             accessToken: response.data.accessToken,
             isLoading: false,
           });
+          toast.success("Welcome back!", { description: "You have successfully logged in." });
           
           if (typeof window !== 'undefined') {
             if (credentials.rememberMe) {
@@ -77,6 +79,7 @@ export const useAuthStore = create<AuthState>()(
             error: errorMessage,
             isLoading: false,
           });
+          toast.error("Login failed", { description: errorMessage });
           throw error;
         }
       },
@@ -87,6 +90,7 @@ export const useAuthStore = create<AuthState>()(
           localStorage.removeItem('refreshToken');
           sessionStorage.removeItem('refreshToken');
         }
+        toast.success("Logged out successfully");
       },
 
       updateUser: (updatedFields) => {

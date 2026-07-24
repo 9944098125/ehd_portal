@@ -21,14 +21,9 @@ export function NotificationSheet() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetchNotifications();
-    // Simulate real-time with polling for now until Socket.IO/Pusher is configured
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 15000); // 15 seconds
-    
-    return () => clearInterval(interval);
-  }, [fetchNotifications]);
+    // Disabled notification fetching for now.
+    // Will be implemented later with Socket.IO.
+  }, []);
 
   const getIcon = (type: string) => {
     switch (type) {
