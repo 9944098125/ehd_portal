@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Camera, User as UserIcon, Loader2, Edit2, Check } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { toast } from "sonner";
 
 interface EditableFieldProps {
   label: string;
@@ -103,7 +104,7 @@ const EditableField = ({ label, field, value, type = "text", onSave }: EditableF
         ) : (
           <>
             <span className="text-zinc-900 dark:text-zinc-100 font-medium">
-              {value || "—"}
+              {type === "phone" && value ? (value.startsWith('+') ? value : `+${value}`) : value || "—"}
             </span>
             <button
               onClick={() => setIsEditing(true)}
@@ -200,11 +201,15 @@ export default function ProfilePage() {
       if (res.ok) {
         setFormData(updatedData);
         updateUser(data.data);
+        if (field !== "profileImage") {
+          toast.success("Profile updated successfully!");
+        }
       } else {
         throw new Error(data.error || "Failed to update profile");
       }
     } catch (error: any) {
       setMessage({ type: "error", text: error.message });
+      toast.error(error.message || "Failed to update profile");
       throw error; // Propagate error so EditableField can revert
     }
   };
@@ -230,11 +235,13 @@ export default function ProfilePage() {
       const data = await res.json();
       if (res.ok) {
         await handleFieldSave("profileImage", data.secure_url);
+        toast.success("Profile image updated successfully!");
       } else {
         throw new Error(data.error?.message || "Failed to upload image");
       }
     } catch (error: any) {
       setMessage({ type: "error", text: error.message });
+      toast.error(error.message || "Failed to upload image");
     } finally {
       setIsUploading(false);
     }
